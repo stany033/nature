@@ -38,6 +38,36 @@ _global_script_classes=[ {
 "class": "ControllerTextureRect",
 "language": "GDScript",
 "path": "res://addons/controller_icons/objects/TextureRect.gd"
+}, {
+"base": "State",
+"class": "DashState",
+"language": "GDScript",
+"path": "res://states/character/dash_state.gd"
+}, {
+"base": "State",
+"class": "IdleState",
+"language": "GDScript",
+"path": "res://states/character/idle_state.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "PersistentState",
+"language": "GDScript",
+"path": "res://states/persistent_state.gd"
+}, {
+"base": "State",
+"class": "RunState",
+"language": "GDScript",
+"path": "res://states/character/run_state.gd"
+}, {
+"base": "Node2D",
+"class": "State",
+"language": "GDScript",
+"path": "res://states/character/state.gd"
+}, {
+"base": "Reference",
+"class": "StateFactory",
+"language": "GDScript",
+"path": "res://states/state_factory.gd"
 } ]
 _global_script_class_icons={
 "ControllerButton": "",
@@ -45,7 +75,13 @@ _global_script_class_icons={
 "ControllerSettings": "",
 "ControllerSprite": "",
 "ControllerSprite3D": "",
-"ControllerTextureRect": ""
+"ControllerTextureRect": "",
+"DashState": "",
+"IdleState": "",
+"PersistentState": "",
+"RunState": "",
+"State": "",
+"StateFactory": ""
 }
 
 [application]
