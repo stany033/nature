@@ -25,14 +25,15 @@ func setup(change_state, animated_sprite, animation_tree, persistent_state):
 	self.persistent_state = persistent_state
 
 func get_input_axis(isAutomatic):
-	if !isAutomatic:
+	#if !isAutomatic:
 		var axis = Vector2.ZERO
 		axis.x = int(Input.is_action_pressed("right")) - int(Input.is_action_pressed("left"))
 		axis.y = int(Input.is_action_pressed("down")) - int(Input.is_action_pressed("up"))
 		lastMovementAxis = axis.normalized()
 		return axis.normalized()
-	else:
-		return lastMovementAxis if lastMovementAxis != Vector2.ZERO else Vector2.RIGHT
+	# TO-DO: Dash guarda direccion (esto esta curseadisimo)
+	#else:
+	#	return lastMovementAxis if lastMovementAxis != Vector2.ZERO else Vector2.RIGHT
 
 func move_character(delta, speedMultiplier, isAutomatic):
 	var axis = get_input_axis(isAutomatic)
