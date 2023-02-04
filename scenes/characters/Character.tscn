@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://assets/sprites/character/placeholder.png" type="Texture" id=1]
 [ext_resource path="res://assets/sprites/character/placeholder-parry.png" type="Texture" id=2]
@@ -23,6 +23,9 @@ animation = "idle"
 [sub_resource type="AnimationNodeAnimation" id=14]
 animation = "jab"
 
+[sub_resource type="AnimationNodeAnimation" id=20]
+animation = "run"
+
 [sub_resource type="AnimationNodeStateMachineTransition" id=10]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=11]
@@ -35,6 +38,14 @@ animation = "jab"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=18]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=21]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=22]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=23]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=24]
+
 [sub_resource type="AnimationNodeStateMachine" id=6]
 states/dash/node = SubResource( 8 )
 states/dash/position = Vector2( 467, 87 )
@@ -42,7 +53,9 @@ states/idle/node = SubResource( 9 )
 states/idle/position = Vector2( 287.05, 87.8889 )
 states/jab/node = SubResource( 14 )
 states/jab/position = Vector2( 286.556, 188.333 )
-transitions = [ "idle", "dash", SubResource( 10 ), "dash", "idle", SubResource( 11 ), "idle", "jab", SubResource( 15 ), "jab", "idle", SubResource( 16 ), "jab", "dash", SubResource( 17 ), "dash", "jab", SubResource( 18 ) ]
+states/run/node = SubResource( 20 )
+states/run/position = Vector2( 117.667, 87 )
+transitions = [ "idle", "dash", SubResource( 10 ), "dash", "idle", SubResource( 11 ), "idle", "jab", SubResource( 15 ), "jab", "idle", SubResource( 16 ), "jab", "dash", SubResource( 17 ), "dash", "jab", SubResource( 18 ), "idle", "run", SubResource( 21 ), "run", "jab", SubResource( 22 ), "jab", "run", SubResource( 23 ), "run", "idle", SubResource( 24 ) ]
 start_node = "idle"
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=7]
@@ -109,6 +122,18 @@ tracks/4/keys = {
 "update": 0,
 "values": [ 0.0 ]
 }
+tracks/5/type = "value"
+tracks/5/path = NodePath(".:rotation_degrees")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
 
 [sub_resource type="Animation" id=4]
 resource_name = "dash"
@@ -159,6 +184,18 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ ExtResource( 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
 }
 
 [sub_resource type="Animation" id=12]
@@ -227,6 +264,23 @@ tracks/4/keys = {
 } ]
 }
 
+[sub_resource type="Animation" id=19]
+resource_name = "run"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1.62451, 0.732043, 1.41421, 0.68302, 1.93187 ),
+"update": 0,
+"values": [ 0.0, 1.0, 0.0, -1.0, 0.0 ]
+}
+
 [node name="Character" type="KinematicBody2D"]
 script = ExtResource( 5 )
 
@@ -263,6 +317,7 @@ anims/RESET = SubResource( 5 )
 anims/dash = SubResource( 4 )
 anims/idle = SubResource( 3 )
 anims/jab = SubResource( 12 )
+anims/run = SubResource( 19 )
 
 [node name="States" type="Node2D" parent="."]
 
