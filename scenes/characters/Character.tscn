@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://assets/sprites/character/placeholder.png" type="Texture" id=1]
 [ext_resource path="res://assets/sprites/character/placeholder-parry.png" type="Texture" id=2]
@@ -18,13 +18,24 @@ var dashEnabled = false
 var parryEnabled = false
 var lastMovementAxis = Vector2.RIGHT
 
+var isAttacking = false
 
 func _ready():
 	stateMachine = $AnimationTree.get(\"parameters/playback\")
 
 func _physics_process(delta):
 	move_character(delta)
-	check_for_dash()
+	
+	if !dashEnabled && !isAttacking:
+		check_for_attacks()
+		check_for_dash()
+
+func back_to_neutral():
+	print(\"Idling!\")
+	stateMachine.travel(\"idle\")
+	isAttacking = false
+	dashEnabled = false
+	parryEnabled = false
 
 #
 # MOVEMENT LOGIC
@@ -66,22 +77,32 @@ func apply_movement(acceleration):
 #
 
 func check_for_dash():
-	if Input.is_action_just_pressed(\"dash\") && !dashEnabled:
+	if Input.is_action_just_pressed(\"dash\"):
+		print(\"Dashing!\")
 		stateMachine.travel(\"dash\")
 		dashEnabled = true
 		parryEnabled = true
 
 func disableParry():
 	parryEnabled = false
-	
-func disableDash():
-	dashEnabled = false
-	stateMachine.travel(\"idle\")
+#
+# JAB
+#
+
+func check_for_attacks():
+	if Input.is_action_just_pressed(\"jab\"):
+		print(\"Jabbing!\")
+		isAttacking = true
+		stateMachine.travel(\"jab\")
 "
 
 [sub_resource type="CapsuleShape2D" id=1]
-radius = 37.9997
-height = 118.001
+radius = 26.9999
+height = 50.0001
+
+[sub_resource type="CapsuleShape2D" id=13]
+radius = 18.0
+height = 50.0
 
 [sub_resource type="AnimationNodeAnimation" id=8]
 animation = "dash"
@@ -89,16 +110,29 @@ animation = "dash"
 [sub_resource type="AnimationNodeAnimation" id=9]
 animation = "idle"
 
+[sub_resource type="AnimationNodeAnimation" id=14]
+animation = "jab"
+
 [sub_resource type="AnimationNodeStateMachineTransition" id=10]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=11]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=15]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=16]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=17]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=18]
 
 [sub_resource type="AnimationNodeStateMachine" id=6]
 states/dash/node = SubResource( 8 )
 states/dash/position = Vector2( 467, 87 )
 states/idle/node = SubResource( 9 )
-states/idle/position = Vector2( 287, 88.3333 )
-transitions = [ "idle", "dash", SubResource( 10 ), "dash", "idle", SubResource( 11 ) ]
+states/idle/position = Vector2( 287.05, 87.8889 )
+states/jab/node = SubResource( 14 )
+states/jab/position = Vector2( 286.556, 188.333 )
+transitions = [ "idle", "dash", SubResource( 10 ), "dash", "idle", SubResource( 11 ), "idle", "jab", SubResource( 15 ), "jab", "idle", SubResource( 16 ), "jab", "dash", SubResource( 17 ), "dash", "jab", SubResource( 18 ) ]
 start_node = "idle"
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=7]
@@ -128,6 +162,42 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Vector2( 1e-05, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Hurtbox:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Hurtbox:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Hurtbox:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -159,13 +229,15 @@ tracks/1/keys = {
 "args": [  ],
 "method": "disableParry"
 }, {
-"args": [  ],
-"method": "disableDash"
+"args": [ null ],
+"method": "back_to_neutral"
 } ]
 }
 
 [sub_resource type="Animation" id=3]
 resource_name = "idle"
+length = 0.2
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:texture")
 tracks/0/interp = 1
@@ -194,6 +266,56 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Vector2( 1e-05, 1 ), Vector2( 1, 1 ), Vector2( 1e-05, 1 ) ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("Hurtbox:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 90.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Hurtbox:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 99, 10 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Hurtbox:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+tracks/4/type = "method"
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ null ],
+"method": "back_to_neutral"
+} ]
+}
 
 [node name="Character" type="KinematicBody2D"]
 script = SubResource( 2 )
@@ -209,9 +331,13 @@ texture = ExtResource( 4 )
 centered = false
 
 [node name="Collision" type="CollisionShape2D" parent="."]
-position = Vector2( 0, 92 )
+position = Vector2( 2, 85 )
 rotation = 1.5708
 shape = SubResource( 1 )
+
+[node name="Hurtbox" type="CollisionShape2D" parent="."]
+shape = SubResource( 13 )
+disabled = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
