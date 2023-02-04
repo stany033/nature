@@ -8,14 +8,25 @@ func _ready():
 func _flip_direction():
 	animated_sprite.flip_h = not animated_sprite.flip_h
 
-func move_left():
-	if animated_sprite.flip_h:
+func _physics_process(delta):
+	# Change to DASH
+	if Input.is_action_just_pressed("dash"):
+		change_state.call_func("dash")
+	# Change to RUN
+	elif .get_input_axis() != Vector2.ZERO:
 		change_state.call_func("run")
-	else:
-		_flip_direction()
+	
 
-func move_right():
-	if not animated_sprite.flip_h:
-		change_state.call_func("run")
-	else:
-		_flip_direction()
+# TO-DO: Move LEFT / RIGHT
+
+#func move_left():
+#	if animated_sprite.flip_h:
+#		change_state.call_func("run")
+#	else:
+#		_flip_direction()
+
+#func move_right():
+#	if not animated_sprite.flip_h:
+#		change_state.call_func("run")
+#	else:
+#		_flip_direction()

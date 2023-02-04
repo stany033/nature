@@ -318,9 +318,3 @@ anims/dash = SubResource( 4 )
 anims/idle = SubResource( 3 )
 anims/jab = SubResource( 12 )
 anims/run = SubResource( 19 )
-
-[node name="States" type="Node2D" parent="."]
-
-[node name="Move" type="Node2D" parent="States"]
-
-[node name="Idle" type="Node2D" parent="States"]

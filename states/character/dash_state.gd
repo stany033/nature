@@ -1,6 +1,6 @@
 extends State
 
-class_name RunState
+class_name DashState
 
 var MAX_SPEED = 400
 var ACCELERATION = 4000
@@ -8,7 +8,8 @@ var DASH_ACCELERATION_MULT = 2.5
 var motion = Vector2.ZERO
 
 func _ready():
-	animation_tree.travel("run")
+	print("Dash!")
+	animation_tree.travel("dash")
 	if animated_sprite.flip_h:
 		motion.x *= -1
 	persistent_state.velocity += motion
