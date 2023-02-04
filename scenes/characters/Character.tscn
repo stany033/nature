@@ -4,97 +4,7 @@
 [ext_resource path="res://assets/sprites/character/placeholder-parry.png" type="Texture" id=2]
 [ext_resource path="res://assets/sprites/character/placeholder-dash.png" type="Texture" id=3]
 [ext_resource path="res://assets/sprites/character/placeholder-jab.png" type="Texture" id=4]
-
-[sub_resource type="GDScript" id=2]
-script/source = "extends KinematicBody2D
-
-var MAX_SPEED = 400
-var ACCELERATION = 4000
-var DASH_ACCELERATION_MULT = 2.5
-var motion = Vector2.ZERO
-
-var stateMachine
-var dashEnabled = false
-var parryEnabled = false
-var lastMovementAxis = Vector2.RIGHT
-
-var isAttacking = false
-
-func _ready():
-	stateMachine = $AnimationTree.get(\"parameters/playback\")
-
-func _physics_process(delta):
-	move_character(delta)
-	
-	if !dashEnabled && !isAttacking:
-		check_for_attacks()
-		check_for_dash()
-
-func back_to_neutral():
-	print(\"Idling!\")
-	stateMachine.travel(\"idle\")
-	isAttacking = false
-	dashEnabled = false
-	parryEnabled = false
-
-#
-# MOVEMENT LOGIC
-#
-
-func move_character(delta):
-	var axis = get_input_axis()
-	if axis == Vector2.ZERO:
-		apply_friction((ACCELERATION * 2) * delta)
-	else:
-		apply_movement(axis * ACCELERATION * delta)
-	motion = move_and_slide(motion)
-
-func get_input_axis():
-	if !dashEnabled:
-		var axis = Vector2.ZERO
-		axis.x = int(Input.is_action_pressed(\"right\")) - int(Input.is_action_pressed(\"left\"))
-		axis.y = int(Input.is_action_pressed(\"down\")) - int(Input.is_action_pressed(\"up\"))
-		lastMovementAxis = axis.normalized()
-		return axis.normalized()
-	else:
-		return lastMovementAxis if lastMovementAxis != Vector2.ZERO else Vector2.RIGHT
-
-func apply_friction(amount):
-	if motion.length() > amount:
-		motion -= motion.normalized() * amount
-	else:
-		motion = Vector2.ZERO
-
-func apply_movement(acceleration):
-	motion += acceleration
-	if dashEnabled:
-		motion = motion.clamped(MAX_SPEED * DASH_ACCELERATION_MULT)
-	else:
-		motion = motion.clamped(MAX_SPEED)
-
-#
-# DASH & PARRY
-#
-
-func check_for_dash():
-	if Input.is_action_just_pressed(\"dash\"):
-		print(\"Dashing!\")
-		stateMachine.travel(\"dash\")
-		dashEnabled = true
-		parryEnabled = true
-
-func disableParry():
-	parryEnabled = false
-#
-# JAB
-#
-
-func check_for_attacks():
-	if Input.is_action_just_pressed(\"jab\"):
-		print(\"Jabbing!\")
-		isAttacking = true
-		stateMachine.travel(\"jab\")
-"
+[ext_resource path="res://states/persistent_state.gd" type="Script" id=5]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 26.9999
@@ -318,7 +228,7 @@ tracks/4/keys = {
 }
 
 [node name="Character" type="KinematicBody2D"]
-script = SubResource( 2 )
+script = ExtResource( 5 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 2, 0 )
