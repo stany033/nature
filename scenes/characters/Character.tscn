@@ -1,100 +1,10 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://assets/sprites/character/placeholder.png" type="Texture" id=1]
 [ext_resource path="res://assets/sprites/character/placeholder-parry.png" type="Texture" id=2]
 [ext_resource path="res://assets/sprites/character/placeholder-dash.png" type="Texture" id=3]
 [ext_resource path="res://assets/sprites/character/placeholder-jab.png" type="Texture" id=4]
-
-[sub_resource type="GDScript" id=2]
-script/source = "extends KinematicBody2D
-
-var MAX_SPEED = 400
-var ACCELERATION = 4000
-var DASH_ACCELERATION_MULT = 2.5
-var motion = Vector2.ZERO
-
-var stateMachine
-var dashEnabled = false
-var parryEnabled = false
-var lastMovementAxis = Vector2.RIGHT
-
-var isAttacking = false
-
-func _ready():
-	stateMachine = $AnimationTree.get(\"parameters/playback\")
-
-func _physics_process(delta):
-	move_character(delta)
-	
-	if !dashEnabled && !isAttacking:
-		check_for_attacks()
-		check_for_dash()
-
-func back_to_neutral():
-	print(\"Idling!\")
-	stateMachine.travel(\"idle\")
-	isAttacking = false
-	dashEnabled = false
-	parryEnabled = false
-
-#
-# MOVEMENT LOGIC
-#
-
-func move_character(delta):
-	var axis = get_input_axis()
-	if axis == Vector2.ZERO:
-		apply_friction((ACCELERATION * 2) * delta)
-	else:
-		apply_movement(axis * ACCELERATION * delta)
-	motion = move_and_slide(motion)
-
-func get_input_axis():
-	if !dashEnabled:
-		var axis = Vector2.ZERO
-		axis.x = int(Input.is_action_pressed(\"right\")) - int(Input.is_action_pressed(\"left\"))
-		axis.y = int(Input.is_action_pressed(\"down\")) - int(Input.is_action_pressed(\"up\"))
-		lastMovementAxis = axis.normalized()
-		return axis.normalized()
-	else:
-		return lastMovementAxis if lastMovementAxis != Vector2.ZERO else Vector2.RIGHT
-
-func apply_friction(amount):
-	if motion.length() > amount:
-		motion -= motion.normalized() * amount
-	else:
-		motion = Vector2.ZERO
-
-func apply_movement(acceleration):
-	motion += acceleration
-	if dashEnabled:
-		motion = motion.clamped(MAX_SPEED * DASH_ACCELERATION_MULT)
-	else:
-		motion = motion.clamped(MAX_SPEED)
-
-#
-# DASH & PARRY
-#
-
-func check_for_dash():
-	if Input.is_action_just_pressed(\"dash\"):
-		print(\"Dashing!\")
-		stateMachine.travel(\"dash\")
-		dashEnabled = true
-		parryEnabled = true
-
-func disableParry():
-	parryEnabled = false
-#
-# JAB
-#
-
-func check_for_attacks():
-	if Input.is_action_just_pressed(\"jab\"):
-		print(\"Jabbing!\")
-		isAttacking = true
-		stateMachine.travel(\"jab\")
-"
+[ext_resource path="res://states/persistent_state.gd" type="Script" id=5]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 26.9999
@@ -104,7 +14,7 @@ height = 50.0001
 radius = 18.0
 height = 50.0
 
-[sub_resource type="AnimationNodeAnimation" id=8]
+[sub_resource type="AnimationNodeAnimation" id=26]
 animation = "dash"
 
 [sub_resource type="AnimationNodeAnimation" id=9]
@@ -113,26 +23,39 @@ animation = "idle"
 [sub_resource type="AnimationNodeAnimation" id=14]
 animation = "jab"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=10]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=11]
+[sub_resource type="AnimationNodeAnimation" id=20]
+animation = "run"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=15]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=16]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=17]
+[sub_resource type="AnimationNodeStateMachineTransition" id=21]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=18]
+[sub_resource type="AnimationNodeStateMachineTransition" id=22]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=23]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=24]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=27]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=28]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=29]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=30]
 
 [sub_resource type="AnimationNodeStateMachine" id=6]
-states/dash/node = SubResource( 8 )
-states/dash/position = Vector2( 467, 87 )
+states/dash/node = SubResource( 26 )
+states/dash/position = Vector2( 471, 99 )
 states/idle/node = SubResource( 9 )
-states/idle/position = Vector2( 287.05, 87.8889 )
+states/idle/position = Vector2( 286.167, 17.2222 )
 states/jab/node = SubResource( 14 )
 states/jab/position = Vector2( 286.556, 188.333 )
-transitions = [ "idle", "dash", SubResource( 10 ), "dash", "idle", SubResource( 11 ), "idle", "jab", SubResource( 15 ), "jab", "idle", SubResource( 16 ), "jab", "dash", SubResource( 17 ), "dash", "jab", SubResource( 18 ) ]
+states/run/node = SubResource( 20 )
+states/run/position = Vector2( 117.667, 87 )
+transitions = [ "idle", "jab", SubResource( 15 ), "jab", "idle", SubResource( 16 ), "idle", "run", SubResource( 21 ), "run", "jab", SubResource( 22 ), "jab", "run", SubResource( 23 ), "run", "idle", SubResource( 24 ), "dash", "run", SubResource( 27 ), "run", "dash", SubResource( 28 ), "idle", "dash", SubResource( 29 ), "dash", "idle", SubResource( 30 ) ]
 start_node = "idle"
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=7]
@@ -199,8 +122,20 @@ tracks/4/keys = {
 "update": 0,
 "values": [ 0.0 ]
 }
+tracks/5/type = "value"
+tracks/5/path = NodePath(".:rotation_degrees")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=25]
 resource_name = "dash"
 length = 0.4
 step = 0.05
@@ -211,27 +146,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 0.4 ),
+"times": PoolRealArray( 0, 0.15, 0.4 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
-"values": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 1 ) ]
-}
-tracks/1/type = "method"
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0.1, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
-"values": [ {
-"args": [  ],
-"method": "disableParry"
-}, {
-"args": [ null ],
-"method": "back_to_neutral"
-} ]
+"values": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 3 ) ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -249,6 +167,18 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ ExtResource( 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
 }
 
 [sub_resource type="Animation" id=12]
@@ -309,19 +239,33 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0.3 ),
-"transitions": PoolRealArray( 1 ),
-"values": [ {
-"args": [ null ],
-"method": "back_to_neutral"
-} ]
+"times": PoolRealArray(  ),
+"transitions": PoolRealArray(  ),
+"values": [  ]
+}
+
+[sub_resource type="Animation" id=19]
+resource_name = "run"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1.62451, 0.732043, 1.41421, 0.68302, 1.93187 ),
+"update": 0,
+"values": [ 0.0, 1.0, 0.0, -1.0, 0.0 ]
 }
 
 [node name="Character" type="KinematicBody2D"]
-script = SubResource( 2 )
+script = ExtResource( 5 )
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 2, 0 )
+position = Vector2( 5, 0 )
 texture = ExtResource( 1 )
 
 [node name="Temp" type="Sprite" parent="."]
@@ -350,12 +294,9 @@ parameters/playback = SubResource( 7 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"
 anims/RESET = SubResource( 5 )
-anims/dash = SubResource( 4 )
+anims/dash = SubResource( 25 )
 anims/idle = SubResource( 3 )
 anims/jab = SubResource( 12 )
+anims/run = SubResource( 19 )
 
-[node name="States" type="Node2D" parent="."]
-
-[node name="Move" type="Node2D" parent="States"]
-
-[node name="Idle" type="Node2D" parent="States"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
