@@ -3,7 +3,8 @@ extends State
 class_name IdleState
 
 func _ready():
-	animation_tree.travel("idle")
+	print("Idling")
+	animation.travel("idle")
 
 func _flip_direction():
 	animated_sprite.flip_h = not animated_sprite.flip_h
@@ -13,7 +14,7 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("dash"):
 		change_state.call_func("dash")
 	# Change to RUN
-	elif .get_input_axis() != Vector2.ZERO:
+	elif .get_input_axis(false) != Vector2.ZERO:
 		change_state.call_func("run")
 	
 

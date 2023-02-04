@@ -2,39 +2,17 @@ extends State
 
 class_name RunState
 
-var MAX_SPEED = 400
-var ACCELERATION = 4000
-var DASH_ACCELERATION_MULT = 2.5
-var motion = Vector2.ZERO
-
 func _ready():
-	animation_tree.travel("run")
+	print("Running")
+	animation.travel("run")
 	if animated_sprite.flip_h:
 		motion.x *= -1
 	persistent_state.velocity += motion
 
 func _physics_process(_delta):
-	move_character(_delta)
+	.move_character(_delta, 1, false)
 
-func move_character(delta):
-	var axis = .get_input_axis()
-	if axis == Vector2.ZERO:
-		apply_friction((ACCELERATION * 2) * delta)
-		if persistent_state.velocity == Vector2.ZERO:
-			change_state.call_func("idle")
-	else:
-		apply_movement(axis * ACCELERATION * delta)
-	motion = persistent_state.move_and_slide(motion)
-
-func apply_friction(amount):
-	if motion.length() > amount:
-		motion -= motion.normalized() * amount
-	else:
-		motion = Vector2.ZERO
-
-func apply_movement(acceleration):
-	motion += acceleration
-	#if dashEnabled:
-	#	motion = motion.clamped(MAX_SPEED * DASH_ACCELERATION_MULT)
-	#else:
-	motion = motion.clamped(MAX_SPEED)
+func _process(_delta):
+	# Change to DASH
+	if Input.is_action_just_pressed("dash"):
+		change_state.call_func("dash")
