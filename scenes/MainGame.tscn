@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/sprites/inan/piso 2.png" type="Texture" id=2]
@@ -6,13 +6,16 @@
 [ext_resource path="res://scenes/ui/Control.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 1011.5, 15 )
+extents = Vector2( 1003, 10 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 9, 180 )
+extents = Vector2( 9.75, 183 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 1009.5, 10 )
+extents = Vector2( 1005, 10 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 10.5, 192 )
 
 [node name="MainGame" type="Node2D"]
 
@@ -96,19 +99,23 @@ texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 0, 0, 2000, 360 )
 
-[node name="InvisibleWall" type="Area2D" parent="BackgroundAssets"]
+[node name="StaticBody2D" type="StaticBody2D" parent="BackgroundAssets"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BackgroundAssets/InvisibleWall"]
-position = Vector2( 995.5, 248 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BackgroundAssets/StaticBody2D"]
+position = Vector2( 993, 254 )
 shape = SubResource( 1 )
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="BackgroundAssets/InvisibleWall"]
-position = Vector2( -10, 440 )
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="BackgroundAssets/StaticBody2D"]
+position = Vector2( -11.75, 438 )
 shape = SubResource( 2 )
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="BackgroundAssets/InvisibleWall"]
-position = Vector2( 1002, 608 )
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="BackgroundAssets/StaticBody2D"]
+position = Vector2( 992, 614 )
 shape = SubResource( 3 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="BackgroundAssets/StaticBody2D"]
+position = Vector2( 2005.5, 438 )
+shape = SubResource( 4 )
 
 [node name="YSort" type="YSort" parent="."]
 
