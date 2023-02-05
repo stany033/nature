@@ -1,14 +1,20 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/Label.gd" type="Script" id=1]
+[ext_resource path="res://assets/fonts/MedievalSharp-Regular.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+size = 26
+font_data = ExtResource( 2 )
 
 [node name="Creditos" type="Node2D"]
 
 [node name="Label" type="Label" parent="."]
-margin_left = 246.0
-margin_top = 584.0
-margin_right = 806.0
-margin_bottom = 1023.0
+margin_left = 193.0
+margin_top = 597.0
+margin_right = 865.0
+margin_bottom = 1947.0
+custom_fonts/font = SubResource( 1 )
 text = "Natural Defense
 
 

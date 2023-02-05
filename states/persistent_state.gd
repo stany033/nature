@@ -5,7 +5,7 @@ class_name PersistentState
 var state
 var state_factory
 onready var sprite = $Sprite
-onready var hurtbox = $Hurtbox
+onready var hurtbox = $HurtboxArea/Hurtbox
 var is_flipped = false
 
 var lives = 2
@@ -45,3 +45,8 @@ func flip_character():
 			is_flipped = false
 		elif axis.x <= 0.4:
 			is_flipped = true
+
+
+func _on_HurtboxArea_area_entered(area):
+	if area.is_in_group("hurtbox-character"):
+		area.take_damage()
