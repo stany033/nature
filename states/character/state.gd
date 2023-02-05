@@ -30,6 +30,7 @@ func get_input_axis(isAutomatic):
 		axis.x = int(Input.is_action_pressed("right")) - int(Input.is_action_pressed("left"))
 		axis.y = int(Input.is_action_pressed("down")) - int(Input.is_action_pressed("up"))
 		lastMovementAxis = axis.normalized()
+		
 		return axis.normalized()
 	# TO-DO: Dash guarda direccion (esto esta curseadisimo)
 	#else:
