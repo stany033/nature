@@ -17,4 +17,13 @@ func _ready():
 
 
 func _on_StartButton_pressed():
-	get_tree().change_scene("res://scenes/Intro.tscn")
+	get_tree().change_scene("res://scenes/MainGame.tscn")
+
+
+func _on_QuitButton_pressed():
+	get_tree().quit()
+
+
+func _on_CreditsButton_pressed():
+	get_tree().change_scene("res://scenes/Credits.tscn")
+
