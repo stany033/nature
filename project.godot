@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "BNode",
+"language": "GDScript",
+"path": "res://addons/action_behavior_tree/lib/b_node.gd"
+}, {
 "base": "State",
 "class": "BulletState",
 "language": "GDScript",
@@ -49,6 +54,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://states/character/dash_state.gd"
 }, {
+"base": "Node",
+"class": "Follow",
+"language": "GDScript",
+"path": "res://scenes/enemies/Follow.gd"
+}, {
+"base": "Resource",
+"class": "HitState",
+"language": "GDScript",
+"path": "res://addons/action_behavior_tree/demo/hit_state.gd"
+}, {
 "base": "State",
 "class": "IdleState",
 "language": "GDScript",
@@ -80,6 +95,7 @@ _global_script_classes=[ {
 "path": "res://states/state_factory.gd"
 } ]
 _global_script_class_icons={
+"BNode": "res://addons/action_behavior_tree/lib/b_node.png",
 "BulletState": "",
 "ControllerButton": "",
 "ControllerMapper": "",
@@ -88,6 +104,8 @@ _global_script_class_icons={
 "ControllerSprite3D": "",
 "ControllerTextureRect": "",
 "DashState": "",
+"Follow": "",
+"HitState": "",
 "IdleState": "",
 "JabState": "",
 "PersistentState": "",
@@ -105,10 +123,11 @@ config/icon="res://icon.png"
 [autoload]
 
 ControllerIcons="*res://addons/controller_icons/ControllerIcons.gd"
+BTDebugServer="*res://addons/btree/script/bt_debug_server.gd"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/FontAwesome5/plugin.cfg", "res://addons/controller_icons/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/FontAwesome5/plugin.cfg", "res://addons/btree/plugin.cfg", "res://addons/controller_icons/plugin.cfg" )
 
 [global]
 
@@ -162,6 +181,11 @@ bullet={
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":1,"pressure":0.0,"pressed":false,"script":null)
  ]
 }
+
+[network]
+
+limits/websocket_server/max_in_buffer_kb=4096
+limits/websocket_server/max_out_buffer_kb=4096
 
 [physics]
 
