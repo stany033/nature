@@ -25,3 +25,6 @@ func _on_DetectionRange_body_entered(body):
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == "Attack":
 		hasStopped = false
+
+func sonido_de_mierda():
+	$RandomAudioStreamPlayer2D.play()
