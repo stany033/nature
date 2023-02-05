@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scenes/MainMenu.gd" type="Script" id=1]
+[ext_resource path="res://assets/sprites/inan/Arbol menu.png" type="Texture" id=2]
 
 [node name="MainMenu" type="Control"]
 anchor_top = 1.0
@@ -31,6 +32,10 @@ margin_right = 193.0
 margin_bottom = 68.0
 text = "Quit"
 align = 0
+
+[node name="ArbolMenu" type="Sprite" parent="."]
+position = Vector2( 831, -307 )
+texture = ExtResource( 2 )
 
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_StartButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/CreditsButton" to="." method="_on_CreditsButton_pressed"]
