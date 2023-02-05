@@ -1,19 +1,83 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/sprites/inan/Blue color.png" type="Texture" id=2]
 [ext_resource path="res://scenes/enemies/Melee.gd" type="Script" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 136.719
+radius = 140.513
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 23.0
 height = 52.0
 
+[sub_resource type="Animation" id=3]
+resource_name = "Attack"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Position2D:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.3 ),
+"transitions": PoolRealArray( 4.92458, 1.68179, 0.196146 ),
+"update": 0,
+"values": [ 0.0, -29.6, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Hurtbox:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.15, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, false, true ]
+}
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Position2D:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Hurtbox:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
+[sub_resource type="CapsuleShape2D" id=5]
+radius = 36.0
+height = 60.0
+
 [node name="Melee" type="KinematicBody2D"]
 script = ExtResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Position2D" type="Position2D" parent="."]
+position = Vector2( 0, 93 )
+
+[node name="Sprite" type="Sprite" parent="Position2D"]
+position = Vector2( 0, -93 )
 texture = ExtResource( 2 )
 
 [node name="DetectionRange" type="Area2D" parent="."]
@@ -26,4 +90,14 @@ position = Vector2( 0, 91 )
 rotation = 1.5708
 shape = SubResource( 2 )
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Attack = SubResource( 3 )
+anims/RESET = SubResource( 4 )
+
+[node name="Hurtbox" type="CollisionShape2D" parent="."]
+position = Vector2( -69, 0 )
+shape = SubResource( 5 )
+disabled = true
+
 [connection signal="body_entered" from="DetectionRange" to="." method="_on_DetectionRange_body_entered"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

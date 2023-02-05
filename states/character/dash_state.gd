@@ -3,7 +3,7 @@ extends State
 class_name DashState
 
 const animationTimer = 0.4
-const speedMultiplier = 2.5
+const speedMultiplier = 3
 
 func _ready():
 	print("Dashing")
