@@ -115,4 +115,6 @@ shape = SubResource( 3 )
 [node name="Character" parent="YSort" instance=ExtResource( 1 )]
 position = Vector2( 399, 338 )
 
-[node name="UI" parent="." instance=ExtResource( 4 )]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" parent="CanvasLayer" instance=ExtResource( 4 )]

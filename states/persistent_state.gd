@@ -5,6 +5,7 @@ class_name PersistentState
 var state
 var state_factory
 
+var lives = 2
 var velocity = Vector2()
 
 func _ready():
